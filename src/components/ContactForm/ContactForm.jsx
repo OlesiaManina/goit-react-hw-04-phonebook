@@ -1,45 +1,29 @@
-import React from 'react';
+import { useState } from "react";
 import { nanoid } from 'nanoid';
 import css from './ContactForm.module.css'
 import PropTypes from 'prop-types';
 
 
-export class ContactForm extends React.Component {
-    state = {
-        name: '',
-        number: '',
-    }
+export const ContactForm = ({onSubmit}) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-    handleChange = e => {
-        const {name, value} = e.currentTarget
-        this.setState({
-          [name]: value,
-        })
-      }
-
-      handleSubmit = e => {
+  const handleSubmit = e => {
         e.preventDefault();
         let contactId = nanoid();
         const contact = {name: e.currentTarget.name.value, number: e.currentTarget.number.value, id: contactId};
-        this.props.onSubmit(contact);
-        this.reset();
+        onSubmit(contact);
+        setName('');
+        setNumber('');
       }
 
-      reset = () => {
-        this.setState({
-        name: '',
-        number: '',
-        })
-      }
-
-    render() {
         return (
-    <form onSubmit={this.handleSubmit} className={css.form}>
+    <form onSubmit={handleSubmit} className={css.form}>
     <label htmlFor='name' className={css.formLabel}> Name
     <input 
     className={css.formInput}
-    onChange={this.handleChange}
-    value={this.state.name}
+    onChange={(e) => setName(e.currentTarget.value)}
+    value={name}
     type="text"
     name="name"
     pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -50,8 +34,8 @@ export class ContactForm extends React.Component {
     <label htmlFor="tel" className={css.formLabel}> Number
     <input 
     className={css.formInput}
-    onChange={this.handleChange}
-    value={this.state.number}
+    onChange={(e) => setNumber(e.currentTarget.value)}
+    value={number}
     type="tel"
     name="number"
     pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
@@ -63,7 +47,7 @@ export class ContactForm extends React.Component {
     </form>
     )
     }
-}
+
 
 export default ContactForm;
 
